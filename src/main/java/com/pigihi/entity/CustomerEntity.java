@@ -23,7 +23,7 @@ public class CustomerEntity {
 	private String role;
 	private String mobile;
 	private String imageUrl;
-	private StatusEnum enableStatus = StatusEnum.ENABLED;
+	private StatusEnum status = StatusEnum.ENABLED;
 	private String houseName;
 	private String streetName;
 	private String cityName;
