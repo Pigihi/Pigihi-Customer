@@ -11,6 +11,9 @@ import com.pigihi.model.EditCustomerModel;
 import com.pigihi.repository.CustomerRepository;
 
 /**
+ * Implementation class for customer service interface
+ * Contains methods that can change values
+ * 
  * @author Ashish Sam T George
  *
  */
@@ -19,12 +22,34 @@ public class CustomerService implements CustomerServiceInterface {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	/**
+	 * Save customer details
+	 * 
+	 * @param customerEntity
+	 * @return CustomerEntity
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@Override
 	public CustomerEntity saveCustomer(CustomerEntity customerEntity) {
 		CustomerEntity savedCustomer = customerRepository.save(customerEntity);
 		return savedCustomer;
 	}
 
+	/**
+	 * Edit details of already existing customer
+	 * 
+	 * @param editCustomerModel
+	 * @return CustomerEntity
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@Override
 	public CustomerEntity editCustomer(EditCustomerModel editCustomerModel) {
 		
@@ -41,6 +66,15 @@ public class CustomerService implements CustomerServiceInterface {
 		
 	}
 
+	/**
+	 * Disable an already existing customer
+	 * 
+	 * @param email
+	 * @return CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@Override
 	public CustomerEntity disableCustomer(String email) {
 		
@@ -55,6 +89,17 @@ public class CustomerService implements CustomerServiceInterface {
 		
 	}
 
+	/**
+	 * Enable an already existing customer
+	 * 
+	 * @param email
+	 * @return CustomerEntity
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@Override
 	public CustomerEntity enableCustomer(String email) {
 		
