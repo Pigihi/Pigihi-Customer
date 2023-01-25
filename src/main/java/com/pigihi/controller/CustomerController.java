@@ -23,6 +23,8 @@ import com.pigihi.service.QueryServiceInterface;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
+ * Controller class for customer API requests
+ * 
  * @author Ashish Sam T George
  *
  */
@@ -37,6 +39,17 @@ public class CustomerController {
 	@Autowired
 	private CustomerServiceInterface customerService;
 	
+	/**
+	 * Handle request to get details of customer
+	 * 
+	 * @param email
+	 * @return JSON string
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author root
+	 * 
+	 */
 	@GetMapping
 	public String customerInfo(@RequestParam String email) {
 		
@@ -46,6 +59,17 @@ public class CustomerController {
 		
 	}
 	
+	/**
+	 * Handle request to add new customer
+	 * 
+	 * @param customerEntity
+	 * @return JSON string
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PostMapping("/add")
 	public String addCustomer(@RequestBody CustomerEntity customerEntity) {
 		
@@ -55,6 +79,18 @@ public class CustomerController {
 		
 	}
 	
+	/**
+	 * Handle request to edit already existing customer
+	 * 
+	 * @param editCustomerModel
+	 * @return JSON string
+	 * 
+	 * @see CustomerEntity
+	 * @see EditCustomerModel
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PutMapping("/edit")
 	public String editCustomer(@RequestBody EditCustomerModel editCustomerModel) {
 		
@@ -64,6 +100,17 @@ public class CustomerController {
 		
 	}
 	
+	/**
+	 * Handle request to disable an already existing customer
+	 * 
+	 * @param email
+	 * @return JSON string
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@DeleteMapping("/disable")
 	public String disableCustomer(@RequestParam String email) {
 		
@@ -73,6 +120,17 @@ public class CustomerController {
 		
 	}
 	
+	/**
+	 * Handle request to enable an already existing customer
+	 * 
+	 * @param email
+	 * @return JSON string
+	 * 
+	 * @see CustomerEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PutMapping("/enable")
 	public String enableCustomer(@RequestParam String email) {
 		
