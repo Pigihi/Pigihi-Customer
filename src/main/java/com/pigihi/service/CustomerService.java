@@ -4,6 +4,7 @@
 package com.pigihi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pigihi.entity.CustomerEntity;
 import com.pigihi.entity.StatusEnum;
@@ -17,6 +18,7 @@ import com.pigihi.repository.CustomerRepository;
  * @author Ashish Sam T George
  *
  */
+@Service
 public class CustomerService implements CustomerServiceInterface {
 	
 	@Autowired
