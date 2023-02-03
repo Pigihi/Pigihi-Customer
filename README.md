@@ -14,11 +14,11 @@ Service for handling all customer related operations
 
 | Functionality | REST Endpoint | Parameters | Response |
 | --- | --- | --- | --- |
-| Get Customer Information | ==GET== `/user/customer` | email - String | JSON string |
-| Add Customer | ==POST== `/user/customer` | JSON string | JSON string |
-| Edit Customer | ==PUT== `/user/customer` | JSON string | JSON string |
-| Disable Customer | ==DELETE== `/user/customer` | JSON string | JSON string |
-| Enable Customer | ==PATCH==`/user/customer` | JSON string | JSON string |
+| Get Customer Information | **GET** `/user/customer` | email - String | JSON string |
+| Add Customer | **POST** `/user/customer` | JSON string | JSON string |
+| Edit Customer | **PUT** `/user/customer` | JSON string | JSON string |
+| Disable Customer | **DELETE** `/user/customer` | JSON string | JSON string |
+| Enable Customer | **PATCH** `/user/customer` | JSON string | JSON string |
 
 ## Configuration
 
