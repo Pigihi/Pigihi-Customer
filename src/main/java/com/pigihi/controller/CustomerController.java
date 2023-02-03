@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,7 +71,8 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PostMapping("/add")
+//	@PostMapping("/add")
+	@PostMapping
 	public String addCustomer(@RequestBody CustomerEntity customerEntity) {
 		
 		CustomerEntity savedCustomerEntity = customerService.saveCustomer(customerEntity);
@@ -91,8 +93,11 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PutMapping("/edit")
+//	@PutMapping("/edit")
+	@PutMapping
 	public String editCustomer(@RequestBody EditCustomerModel editCustomerModel) {
+		
+		//TODO Need to check whether customer already exists or not
 		
 		CustomerEntity editedCustomer = customerService.editCustomer(editCustomerModel);
 		String customer = ConvertToJson(editedCustomer);
@@ -111,7 +116,8 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@DeleteMapping("/disable")
+//	@DeleteMapping("/disable")
+	@DeleteMapping
 	public String disableCustomer(@RequestParam String email) {
 		
 		CustomerEntity disabledCustomer = customerService.disableCustomer(email);
@@ -131,7 +137,8 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PutMapping("/enable")
+//	@PatchMapping("/enable")
+	@PatchMapping
 	public String enableCustomer(@RequestParam String email) {
 		
 		CustomerEntity enabledCustomer = customerService.enableCustomer(email);
