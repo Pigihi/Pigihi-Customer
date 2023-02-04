@@ -3,6 +3,8 @@
  */
 package com.pigihi.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -118,7 +120,7 @@ public class CustomerController {
 	 */
 //	@DeleteMapping("/disable")
 	@DeleteMapping
-	public String disableCustomer(@RequestParam String email) {
+	public String disableCustomer(@RequestParam String email) throws IOException, InterruptedException {
 		
 		CustomerEntity disabledCustomer = customerService.disableCustomer(email);
 		String customer = ConvertToJson(disabledCustomer);
@@ -139,7 +141,7 @@ public class CustomerController {
 	 */
 //	@PatchMapping("/enable")
 	@PatchMapping
-	public String enableCustomer(@RequestParam String email) {
+	public String enableCustomer(@RequestParam String email) throws InterruptedException, IOException {
 		
 		CustomerEntity enabledCustomer = customerService.enableCustomer(email);
 		String customer = ConvertToJson(enabledCustomer);

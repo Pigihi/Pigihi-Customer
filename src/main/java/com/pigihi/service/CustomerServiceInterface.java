@@ -3,6 +3,8 @@
  */
 package com.pigihi.service;
 
+import java.io.IOException;
+
 import com.pigihi.entity.CustomerEntity;
 import com.pigihi.model.EditCustomerModel;
 
@@ -19,8 +21,8 @@ public interface CustomerServiceInterface {
 
 	CustomerEntity editCustomer(EditCustomerModel editCustomerModel);
 
-	CustomerEntity disableCustomer(String email);
+	CustomerEntity disableCustomer(String email) throws InterruptedException, IOException;
 
-	CustomerEntity enableCustomer(String email);
+	CustomerEntity enableCustomer(String email) throws InterruptedException, IOException;
 
 }

@@ -3,6 +3,12 @@
  */
 package com.pigihi.service;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +84,7 @@ public class CustomerService implements CustomerServiceInterface {
 	 * 
 	 */
 	@Override
-	public CustomerEntity disableCustomer(String email) {
+	public CustomerEntity disableCustomer(String email) throws InterruptedException, IOException {
 		
 		CustomerEntity customer = customerRepository.findByEmail(email);
 		customer.setStatus(StatusEnum.USER_DISABLED);
@@ -86,7 +92,17 @@ public class CustomerService implements CustomerServiceInterface {
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
 //		userLoginService.disableUser(email);
-
+		
+		HttpClient httpClient = HttpClient.newHttpClient();
+		URI uri = URI.create("http://AUTH-SERVICE/disableUser?email=" + email);
+		HttpRequest userRequest = HttpRequest.newBuilder()
+									.uri(uri)
+									.DELETE()
+									.build();
+		HttpResponse<String> response = httpClient.send(userRequest,
+										HttpResponse.BodyHandlers.ofString());
+		//TODO Check the response
+		
 		return customer;
 		
 	}
@@ -103,7 +119,7 @@ public class CustomerService implements CustomerServiceInterface {
 	 * 
 	 */
 	@Override
-	public CustomerEntity enableCustomer(String email) {
+	public CustomerEntity enableCustomer(String email) throws InterruptedException, IOException {
 		
 		//TODO Consider who makes this call (customer or admin) and then do the needful
 		
@@ -113,6 +129,17 @@ public class CustomerService implements CustomerServiceInterface {
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
 //		userLoginService.disableUser(email);
+		
+		HttpClient httpClient = HttpClient.newHttpClient();
+		URI uri = URI.create("http://AUTH-SERVICE/enableUser?email=" + email);
+		HttpRequest userRequest = HttpRequest.newBuilder()
+									.uri(uri)
+									.method("PATCH", null)
+									.build();
+		HttpResponse<String> response = httpClient.send(userRequest, 
+										HttpResponse.BodyHandlers.ofString());
+		
+		//TODO Check response
 
 		return customer;
 	}
