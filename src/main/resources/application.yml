@@ -4,13 +4,13 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://service-registry:8761/eureka
   instance:
     hostname: localhost
 
 # Server properties
 server:
-  port: 8091
+  port: 8080
 
 # Application properties
 spring:
@@ -20,5 +20,5 @@ spring:
   data:
     mongodb:
       database: testWorkingDB
-      host: localhost
+      host: customer-db
       port: 27017

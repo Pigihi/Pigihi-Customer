@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  customer-db:
+    container_name: customer-db
+    image: 'mongo'
+    restart: always
+    volumes:
+      - mongo-volume:/data/db
+    ports:
+      - 27019:27017
+
+  customer-service:
+    container_name: customer-service-v0.1
+    image: customer-service-v0.1-image
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8091:8080
+    restart: always
+    depends_on:
+      - customer-db
+
+volumes:
+  mongo-volume:
+
+networks:
+  default:
+    external:
+      name: pigihi-network
