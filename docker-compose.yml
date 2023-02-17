@@ -8,7 +8,7 @@ services:
     volumes:
       - mongo-volume:/data/db
     ports:
-      - 27019:27017
+      - 27016:27017
 
   customer-service:
     container_name: customer-service-v0.1
