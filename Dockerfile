@@ -8,6 +8,6 @@ COPY src ./src
 
 RUN ./gradlew build
 
-EXPOSE 8080
+EXPOSE 8091
 
 CMD ["./gradlew", "bootRun"]

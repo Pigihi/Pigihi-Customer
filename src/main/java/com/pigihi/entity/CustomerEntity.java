@@ -3,6 +3,8 @@
  */
 package com.pigihi.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,10 +27,13 @@ public class CustomerEntity {
 	private String role;
 	private String mobile;
 	private String imageUrl;
-	private StatusEnum status = StatusEnum.ENABLED;
+//	private StatusEnum status = StatusEnum.ENABLED;
+	private StatusEnum enableStatus = StatusEnum.ENABLED;
 	private String houseName;
 	private String streetName;
 	private String cityName;
 	private String pincode;
+	
+	private List<PrivilegeEnum> privileges;
 
 }

@@ -87,7 +87,8 @@ public class CustomerService implements CustomerServiceInterface {
 	public CustomerEntity disableCustomer(String email) throws InterruptedException, IOException {
 		
 		CustomerEntity customer = customerRepository.findByEmail(email);
-		customer.setStatus(StatusEnum.USER_DISABLED);
+//		customer.setStatus(StatusEnum.USER_DISABLED);
+		customer.setEnableStatus(StatusEnum.USER_DISABLED);
 		customerRepository.save(customer);
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
@@ -124,7 +125,8 @@ public class CustomerService implements CustomerServiceInterface {
 		//TODO Consider who makes this call (customer or admin) and then do the needful
 		
 		CustomerEntity customer = customerRepository.findByEmail(email);
-		customer.setStatus(StatusEnum.ENABLED);
+//		customer.setStatus(StatusEnum.ENABLED);
+		customer.setEnableStatus(StatusEnum.ENABLED);
 		customerRepository.save(customer);
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
