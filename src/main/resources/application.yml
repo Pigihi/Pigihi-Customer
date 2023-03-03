@@ -1,4 +1,7 @@
 eureka_hostname: service-registry
+
+service_hostname: customer-service
+
 mongodb_hostname: customer-db
 
 # Production environment
@@ -18,7 +21,7 @@ eureka:
     service-url:
       defaultZone: http://${eureka_hostname}:8761/eureka
   instance:
-    hostname: localhost
+    hostname: ${service_hostname}
 
 # Server properties
 server:
