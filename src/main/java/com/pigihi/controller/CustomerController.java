@@ -4,6 +4,7 @@
 package com.pigihi.controller;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -53,8 +54,23 @@ public class CustomerController {
 	 * @author root
 	 * 
 	 */
+//	@GetMapping
+//	public String customerInfo(@RequestParam String email) {
+//		
+//		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
+//		String customer = ConvertToJson(customerEntity);
+//		return customer;
+//		
+//	}
+	
 	@GetMapping
-	public String customerInfo(@RequestParam String email) {
+	public String customerInfo(@RequestParam String email, HttpServletRequest request) {
+		
+		System.out.println("Headers received in Customer Service: ");
+		Enumeration<String> headers = request.getHeaderNames();
+		while(headers.hasMoreElements()) {
+			System.out.println(headers.nextElement());
+		}
 		
 		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
 		String customer = ConvertToJson(customerEntity);
