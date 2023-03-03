@@ -33,7 +33,7 @@ eureka:
     service-url:
       defaultZone: address of the eureka server (Eg: http://localhost:8761/eureka)
   instance:
-    hostname: specify the hostname here (Eg: localhost)
+    hostname: specify the hostname of service here (Eg: localhost)
 
 # Server properties
 server:
@@ -60,6 +60,7 @@ In application.yml file, change the properties
 | Property | Value | Example |
 | --- | --- | --- |
 | eureka_hostname | hostname of eureka server | service-registry |
+| service_hostname | hostname of service (try to use the same as in docker-compose) | customer-service |
 | mongodb_hostname | hostname of mongodb | customer-db |
 | mongodb\_database\_name | database name | customerDB |
 
