@@ -89,12 +89,13 @@ public class CustomerService implements CustomerServiceInterface {
 		CustomerEntity customer = customerRepository.findByEmail(email);
 //		customer.setStatus(StatusEnum.USER_DISABLED);
 		customer.setEnableStatus(StatusEnum.USER_DISABLED);
-		customerRepository.save(customer);
+		CustomerEntity disabledCustomer = customerRepository.save(customer);
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
 //		userLoginService.disableUser(email);
 		
 		HttpClient httpClient = HttpClient.newHttpClient();
+		//TODO Is this the correct URI
 		URI uri = URI.create("http://AUTH-SERVICE/disableUser?email=" + email);
 		HttpRequest userRequest = HttpRequest.newBuilder()
 									.uri(uri)
@@ -104,8 +105,10 @@ public class CustomerService implements CustomerServiceInterface {
 										HttpResponse.BodyHandlers.ofString());
 		//TODO Check the response
 		
-		return customer;
+		System.out.println("Response from authentication microservice: " + response.body());
 		
+//		return customer;
+		return disabledCustomer;
 	}
 
 	/**
@@ -127,12 +130,13 @@ public class CustomerService implements CustomerServiceInterface {
 		CustomerEntity customer = customerRepository.findByEmail(email);
 //		customer.setStatus(StatusEnum.ENABLED);
 		customer.setEnableStatus(StatusEnum.ENABLED);
-		customerRepository.save(customer);
+		CustomerEntity savedCustomer = customerRepository.save(customer);
 
 		//TODO Call API of AuthNAuthZ microservice to disable the user
 //		userLoginService.disableUser(email);
 		
 		HttpClient httpClient = HttpClient.newHttpClient();
+		//TODO Is this the correct address
 		URI uri = URI.create("http://AUTH-SERVICE/enableUser?email=" + email);
 		HttpRequest userRequest = HttpRequest.newBuilder()
 									.uri(uri)
@@ -143,7 +147,50 @@ public class CustomerService implements CustomerServiceInterface {
 		
 		//TODO Check response
 
-		return customer;
+//		return customer;
+		return savedCustomer;
+	}
+
+	@Override
+	public CustomerEntity disableCustomerByAdmin(String email) throws IOException, InterruptedException {
+		// TODO Call authentication microservice to disable the user by admin
+		CustomerEntity customer = customerRepository.findByEmail(email);
+		customer.setEnableStatus(StatusEnum.ADMIN_DISABLED);
+		CustomerEntity disabledCustomer = customerRepository.save(customer);
+		
+		HttpClient httpClient = HttpClient.newHttpClient();
+		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
+		HttpRequest userRequest = HttpRequest.newBuilder()
+									.uri(uri)
+									.DELETE()
+									.build();
+		HttpResponse<String> response = httpClient.send(userRequest,
+										HttpResponse.BodyHandlers.ofString());
+		System.out.println("Response from authentication microservice: " + response.body());
+		
+		return disabledCustomer;
+		
+	}
+
+	@Override
+	public CustomerEntity enableCustomerByAdmin(String email) throws IOException, InterruptedException {
+		// TODO Call authentication microservice to enable the user by admin
+		CustomerEntity customer = customerRepository.findByEmail(email);
+		customer.setEnableStatus(StatusEnum.ENABLED);
+		CustomerEntity enabledCustomer = customerRepository.save(customer);
+		
+		HttpClient httpClient = HttpClient.newHttpClient();
+		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
+		HttpRequest userRequest = HttpRequest.newBuilder()
+									.uri(uri)
+									.method("PATCH", null)
+									.build();
+		HttpResponse<String> response = httpClient.send(userRequest,
+										HttpResponse.BodyHandlers.ofString());
+		System.out.println("Response from authentication microservice: " + response.body());
+		
+		return enabledCustomer;
+		
 	}
 
 }

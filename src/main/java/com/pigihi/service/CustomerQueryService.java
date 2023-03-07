@@ -3,6 +3,8 @@
  */
 package com.pigihi.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,12 @@ public class CustomerQueryService implements QueryServiceInterface {
 	public CustomerEntity customerInfo(String email) {
 		CustomerEntity customer = customerRepository.findByEmail(email);
 		return customer;
+	}
+
+	@Override
+	public List<CustomerEntity> findAllCustomers() {
+		List<CustomerEntity> customers = customerRepository.findAll();
+		return customers;
 	}
 
 }

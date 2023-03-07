@@ -2,15 +2,16 @@ eureka_hostname: service-registry
 
 service_hostname: customer-service
 
-mongodb_hostname: customer-db
-
 # Production environment
+#mongodb_hostname: customer-db
 #mongodb_database_name: customerDB
 
 # Development environment
-mongodb_database_name: devCustomerDB
+mongodb_hostname: localhost
+mongodb_database_name: testWorkingDB
 
 # Test environment
+#mongodb_hostname: customer-db
 #mongodb_database_name: testCustomerDB
 
 # Eureka properties

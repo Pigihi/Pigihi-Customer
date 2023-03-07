@@ -25,4 +25,8 @@ public interface CustomerServiceInterface {
 
 	CustomerEntity enableCustomer(String email) throws InterruptedException, IOException;
 
+	CustomerEntity disableCustomerByAdmin(String email) throws InterruptedException, IOException;
+
+	CustomerEntity enableCustomerByAdmin(String email) throws IOException, InterruptedException;
+
 }

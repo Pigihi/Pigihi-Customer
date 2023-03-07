@@ -3,6 +3,8 @@
  */
 package com.pigihi.service;
 
+import java.util.List;
+
 import com.pigihi.entity.CustomerEntity;
 
 /**
@@ -15,5 +17,7 @@ import com.pigihi.entity.CustomerEntity;
 public interface QueryServiceInterface {
 
 	CustomerEntity customerInfo(String email);
+
+	List<CustomerEntity> findAllCustomers();
 
 }

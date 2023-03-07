@@ -5,6 +5,7 @@ package com.pigihi.controller;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -144,6 +145,7 @@ public class CustomerController {
 		
 	}
 	
+	
 	/**
 	 * Handle request to enable an already existing customer
 	 * 
@@ -163,6 +165,32 @@ public class CustomerController {
 		String customer = ConvertToJson(enabledCustomer);
 		return customer;
 		
+	}
+	
+	//TODO Currently, a seperate controller method is used to handle disabling customer by admin. Revaluate whether this is neccessary
+		@DeleteMapping("/byAdmin")
+		public String disableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
+			
+			CustomerEntity adminDisabledCustomer = customerService.disableCustomerByAdmin(email);
+			String customer = ConvertToJson(adminDisabledCustomer);
+			return customer;
+			
+		}
+		
+		//TODO Only admins should be able to do this
+		@PatchMapping("/byAdmin")
+		public String enableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
+			CustomerEntity adminEnabledCustomer = customerService.enableCustomerByAdmin(email);
+			String customer = ConvertToJson(adminEnabledCustomer);
+			return customer;
+		}
+	
+	@GetMapping("/all")
+	public String getCustomers() {
+		List<CustomerEntity> customers = customerQueryService.findAllCustomers();
+		Gson listGson = new Gson();
+		String customersJson = listGson.toJson(customers);
+		return customersJson;
 	}
 	
 	private String ConvertToJson(CustomerEntity customerEntity) {
