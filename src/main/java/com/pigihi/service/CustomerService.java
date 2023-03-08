@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpRequest.BodyPublishers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -159,7 +160,8 @@ public class CustomerService implements CustomerServiceInterface {
 		CustomerEntity disabledCustomer = customerRepository.save(customer);
 		
 		HttpClient httpClient = HttpClient.newHttpClient();
-		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
+		URI uri = URI.create("http://localhost:8099/auth/user/byAdmin?email=" + email);
+//		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
 		HttpRequest userRequest = HttpRequest.newBuilder()
 									.uri(uri)
 									.DELETE()
@@ -176,14 +178,16 @@ public class CustomerService implements CustomerServiceInterface {
 	public CustomerEntity enableCustomerByAdmin(String email) throws IOException, InterruptedException {
 		// TODO Call authentication microservice to enable the user by admin
 		CustomerEntity customer = customerRepository.findByEmail(email);
+		System.out.println("Obtained Customer: " + customer);
 		customer.setEnableStatus(StatusEnum.ENABLED);
 		CustomerEntity enabledCustomer = customerRepository.save(customer);
 		
 		HttpClient httpClient = HttpClient.newHttpClient();
-		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
+//		URI uri = URI.create("http://auth-service/auth/user/byAdmin?email=" + email);
+		URI uri = URI.create("http://localhost:8099/auth/user/byAdmin?email=" + email);
 		HttpRequest userRequest = HttpRequest.newBuilder()
 									.uri(uri)
-									.method("PATCH", null)
+									.method("PATCH", BodyPublishers.ofString(""))
 									.build();
 		HttpResponse<String> response = httpClient.send(userRequest,
 										HttpResponse.BodyHandlers.ofString());

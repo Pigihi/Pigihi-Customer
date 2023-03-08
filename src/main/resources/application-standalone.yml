@@ -1,0 +1,9 @@
+# Standalone environment
+
+mongodb_hostname: localhost
+mongodb_database_name: testWorkingDB
+
+# Eureka properties
+eureka:
+  client:
+    enabled: false
