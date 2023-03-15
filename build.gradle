@@ -15,6 +15,7 @@ configurations {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
 	
@@ -31,6 +32,9 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.10'
 	
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	
+	// Request Library dependency
+	// implementation 'com.pigihi:Pigihi-Data-Request-Library:0.0.1-SNAPSHOT'
 	
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

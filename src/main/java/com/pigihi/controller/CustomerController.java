@@ -21,9 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.pigihi.entity.CustomerEntity;
+import com.pigihi.library.dataConverter.service.DataConverter;
+import com.pigihi.model.CustomerAddressModel;
+import com.pigihi.model.CustomerPasswordModel;
 import com.pigihi.model.EditCustomerModel;
-import com.pigihi.service.CustomerServiceInterface;
-import com.pigihi.service.QueryServiceInterface;
+import com.pigihi.service.CustomerAddService;
+import com.pigihi.service.CustomerAddressService;
+import com.pigihi.service.CustomerEditService;
+import com.pigihi.service.CustomerNameService;
+import com.pigihi.service.CustomerProfileImageService;
+import com.pigihi.service.CustomerQueryService;
+import com.pigihi.service.CustomerStatusService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -35,14 +43,32 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/user/customer")
+@RequestMapping("/user/customer/self")
 public class CustomerController {
 	
 	@Autowired
-	private QueryServiceInterface customerQueryService;
+	private CustomerQueryService customerQueryService;
 	
 	@Autowired
-	private CustomerServiceInterface customerService;
+	private CustomerAddService customerAddService;
+	
+	@Autowired
+	private CustomerEditService customerEditService;
+	
+	@Autowired
+	private CustomerStatusService customerStatusService;
+	
+	@Autowired
+	private CustomerNameService customerNameService;
+	
+	@Autowired
+	private CustomerProfileImageService customerProfileImageService;
+	
+	@Autowired
+	private CustomerAddressService customerAddressService;
+	
+	@Autowired
+	private DataConverter dataConverter;
 	
 	/**
 	 * Handle request to get details of customer
@@ -67,6 +93,7 @@ public class CustomerController {
 	@GetMapping
 	public String customerInfo(@RequestParam String email, HttpServletRequest request) {
 		
+		//TODO Get email from header
 		System.out.println("Headers received in Customer Service: ");
 		Enumeration<String> headers = request.getHeaderNames();
 		while(headers.hasMoreElements()) {
@@ -74,8 +101,9 @@ public class CustomerController {
 		}
 		
 		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
-		String customer = ConvertToJson(customerEntity);
-		return customer;
+//		String customer = ConvertToJson(customerEntity);
+		String customerJson = dataConverter.convertToJson(customerEntity);
+		return customerJson;
 		
 	}
 	
@@ -94,9 +122,10 @@ public class CustomerController {
 	@PostMapping
 	public String addCustomer(@RequestBody CustomerEntity customerEntity) {
 		
-		CustomerEntity savedCustomerEntity = customerService.saveCustomer(customerEntity);
-		String customer = ConvertToJson(savedCustomerEntity);
-		return customer;
+		CustomerEntity savedCustomerEntity = customerAddService.saveCustomer(customerEntity);
+//		String customer = ConvertToJson(savedCustomerEntity);
+		String customerJson = dataConverter.convertToJson(savedCustomerEntity);
+		return customerJson;
 		
 	}
 	
@@ -118,9 +147,10 @@ public class CustomerController {
 		
 		//TODO Need to check whether customer already exists or not
 		
-		CustomerEntity editedCustomer = customerService.editCustomer(editCustomerModel);
-		String customer = ConvertToJson(editedCustomer);
-		return customer;
+		CustomerEntity editedCustomer = customerEditService.editCustomer(editCustomerModel);
+//		String customer = ConvertToJson(editedCustomer);
+		String customerJson = dataConverter.convertToJson(editedCustomer);
+		return customerJson;
 		
 	}
 	
@@ -139,9 +169,11 @@ public class CustomerController {
 	@DeleteMapping
 	public String disableCustomer(@RequestParam String email) throws IOException, InterruptedException {
 		
-		CustomerEntity disabledCustomer = customerService.disableCustomer(email);
-		String customer = ConvertToJson(disabledCustomer);
-		return customer;
+		//TODO Get email from header
+		CustomerEntity disabledCustomer = customerStatusService.disableCustomer(email);
+//		String customer = ConvertToJson(disabledCustomer);
+		String customerJson = dataConverter.convertToJson(disabledCustomer);
+		return customerJson;
 		
 	}
 	
@@ -161,42 +193,73 @@ public class CustomerController {
 	@PatchMapping
 	public String enableCustomer(@RequestParam String email) throws InterruptedException, IOException {
 		
-		CustomerEntity enabledCustomer = customerService.enableCustomer(email);
-		String customer = ConvertToJson(enabledCustomer);
-		return customer;
+		//TODO Get email from header
+		CustomerEntity enabledCustomer = customerStatusService.enableCustomer(email);
+//		String customer = ConvertToJson(enabledCustomer);
+		String customerJson = dataConverter.convertToJson(enabledCustomer);
+		return customerJson;
+//		return customer;
 		
 	}
 	
-	//TODO Currently, a seperate controller method is used to handle disabling customer by admin. Revaluate whether this is neccessary
-		@DeleteMapping("/byAdmin")
-		public String disableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
-			
-			CustomerEntity adminDisabledCustomer = customerService.disableCustomerByAdmin(email);
-			String customer = ConvertToJson(adminDisabledCustomer);
-			return customer;
-			
-		}
+	@PutMapping("/fullName")
+	public String changeFullName(@RequestParam String fullName) throws InterruptedException, IOException {
+		//TODO Get email from header
 		
-		//TODO Only admins should be able to do this
-		@PatchMapping("/byAdmin")
-		public String enableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
-			CustomerEntity adminEnabledCustomer = customerService.enableCustomerByAdmin(email);
-			String customer = ConvertToJson(adminEnabledCustomer);
-			return customer;
-		}
-	
-	@GetMapping("/all")
-	public String getCustomers() {
-		List<CustomerEntity> customers = customerQueryService.findAllCustomers();
-		Gson listGson = new Gson();
-		String customersJson = listGson.toJson(customers);
-		return customersJson;
+		//TODO Call authentication service to modify full name
+		String email = "";
+		CustomerEntity changedCustomer = customerNameService.changeFullName(email, fullName);
+		String customerJson = dataConverter.convertToJson(changedCustomer);
+		return customerJson;
 	}
 	
-	private String ConvertToJson(CustomerEntity customerEntity) {
-		Gson gson = new Gson();
-		String customer = gson.toJson(customerEntity);
-		return customer;
+	@PutMapping("/email")
+	public String changeEmail(@RequestParam String email) {
+		//TODO Get current email from header
+		
+		//TODO Do verification of new email
+		//TODO Call authentication service to modify email
+		return "NOT IMPLEMENTED";
+	}
+	
+	@PutMapping("/mobile")
+	public String changeMobile(@RequestParam String mobile) {
+		//TODO Get email from header
+		
+		//TODO Do verification of new mobile
+		//TODO Call authentication service to modify mobile
+		return "NOT IMPLEMENTED";
+	}
+	
+	@PutMapping("/password")
+	public String changePassword(@RequestBody CustomerPasswordModel customerPasswordModel) {
+		//TODO Get email from header
+		
+		//TODO Check whether old password is correct
+		//TODO Check new password and confirm password are same
+		//TODO Both of the above logic should be in authentication service
+		//TODO Call authentication service
+		return "NOT IMPLEMENTED";
+	}
+	
+	@PutMapping("/profileImage")
+	public String changeProfileImage(@RequestParam String imageUrl) {
+		//TODO Get email from header
+		
+		String email = "";
+		CustomerEntity changedCustomer = customerProfileImageService.changeProfileImage(email, imageUrl);
+		String customerJson = dataConverter.convertToJson(changedCustomer);
+		return customerJson;
+	}
+	
+	@PutMapping("/address")
+	public String changeAddress(@RequestBody CustomerAddressModel customerAddressModel) {
+		//TODO Get email from header
+		
+		String email = "";
+		CustomerEntity changedCustomer = customerAddressService.changeAddress(email, customerAddressModel);
+		String customerJson = dataConverter.convertToJson(changedCustomer);
+		return customerJson;
 	}
 
 }

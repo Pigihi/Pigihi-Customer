@@ -3,6 +3,39 @@
 mongodb_hostname: localhost
 mongodb_database_name: testWorkingDB
 
+# Auth URIs
+authService:
+  uri: http://localhost:8099/auth
+  endpoint:
+    disableUser:
+      endpoint: /user/byAdmin
+      queryParam: email
+    enableUser:
+      endpoint: /user/byAdmin
+      queryParam: email
+    enableUserOwn:
+      endpoint: /user
+      queryParam: email
+    disableUserOwn:
+      endpoint: /user
+      queryParam: email
+    fullName:
+      endpoint: /user/fullName
+      queryParam: fullName
+    mobile:
+      endpoint: /user/mobile
+      queryParam: mobile
+    email:
+      endpoint: /user/email
+      queryParam: email
+    password:
+      endpoint: /user/password
+    profileImage:
+      endpoint: /user/profileImage
+      queryParam: imageUrl
+    address:
+      endpoint: /user/address
+
 # Eureka properties
 eureka:
   client:
