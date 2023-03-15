@@ -3,8 +3,6 @@
  */
 package com.pigihi.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +10,19 @@ import com.pigihi.entity.CustomerEntity;
 import com.pigihi.repository.CustomerRepository;
 
 /**
- * Implementation class for customer query service interface
- * 
  * @author Ashish Sam T George
  *
  */
 @Service
-public class CustomerQueryService {
+public class CustomerAddService {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
-
+	
 	/**
-	 * Get details of customer
+	 * Save customer details
 	 * 
-	 * @param email
+	 * @param customerEntity
 	 * @return CustomerEntity
 	 * 
 	 * @see CustomerEntity
@@ -34,9 +30,9 @@ public class CustomerQueryService {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	public CustomerEntity customerInfo(String email) {
-		CustomerEntity customer = customerRepository.findByEmail(email);
-		return customer;
+	public CustomerEntity saveCustomer(CustomerEntity customerEntity) {
+		CustomerEntity savedCustomer = customerRepository.save(customerEntity);
+		return savedCustomer;
 	}
 
 }
