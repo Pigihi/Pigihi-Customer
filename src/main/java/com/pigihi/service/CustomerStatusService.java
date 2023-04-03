@@ -54,15 +54,6 @@ public class CustomerStatusService {
 		customer.setEnableStatus(StatusEnum.USER_DISABLED);
 		CustomerEntity disabledCustomer = customerRepository.save(customer);
 
-//		HttpClient httpClient = HttpClient.newHttpClient();
-//		//TODO Is this the correct URI
-//		URI uri = URI.create("http://AUTH-SERVICE/disableUser?email=" + email);
-//		HttpRequest userRequest = HttpRequest.newBuilder()
-//									.uri(uri)
-//									.DELETE()
-//									.build();
-//		HttpResponse<String> response1 = httpClient.send(userRequest,
-//										HttpResponse.BodyHandlers.ofString());
 		//TODO Check the response
 		
 		String uri = authUri.concat(disableUserEndpoint);
@@ -70,7 +61,6 @@ public class CustomerStatusService {
 																	email);
 		System.out.println("Response from authentication microservice: " + response.body());
 		
-//		return customer;
 		return disabledCustomer;
 	}
 
@@ -92,26 +82,15 @@ public class CustomerStatusService {
 		CustomerEntity customer = customerRepository.findByEmail(email);
 //		customer.setStatus(StatusEnum.ENABLED);
 		customer.setEnableStatus(StatusEnum.ENABLED);
-		CustomerEntity savedCustomer = customerRepository.save(customer);
+		CustomerEntity enabledCustomer = customerRepository.save(customer);
 
-//		HttpClient httpClient = HttpClient.newHttpClient();
-//		//TODO Is this the correct address
-//		URI uri = URI.create("http://AUTH-SERVICE/enableUser?email=" + email);
-//		HttpRequest userRequest = HttpRequest.newBuilder()
-//									.uri(uri)
-//									.method("PATCH", null)
-//									.build();
-//		HttpResponse<String> response1 = httpClient.send(userRequest, 
-//										HttpResponse.BodyHandlers.ofString());
-		
 		//TODO Check response
 
 		String uri = authUri.concat(enableUserEndpoint);
 		HttpResponse<String> response = patchRequestSender.send(uri, enableUserQueryParam, 
 																email);
 		System.out.println("Response obtained from authentication service: " + response.body());
-//		return customer;
-		return savedCustomer;
+		return enabledCustomer;
 	}
 
 }

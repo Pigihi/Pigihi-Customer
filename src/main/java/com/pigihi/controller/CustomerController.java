@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,6 @@ import com.pigihi.model.CustomerPasswordModel;
 import com.pigihi.model.EditCustomerModel;
 import com.pigihi.service.CustomerAddService;
 import com.pigihi.service.CustomerAddressService;
-import com.pigihi.service.CustomerEditService;
 import com.pigihi.service.CustomerNameService;
 import com.pigihi.service.CustomerProfileImageService;
 import com.pigihi.service.CustomerQueryService;
@@ -53,9 +53,6 @@ public class CustomerController {
 	private CustomerAddService customerAddService;
 	
 	@Autowired
-	private CustomerEditService customerEditService;
-	
-	@Autowired
 	private CustomerStatusService customerStatusService;
 	
 	@Autowired
@@ -66,9 +63,14 @@ public class CustomerController {
 	
 	@Autowired
 	private CustomerAddressService customerAddressService;
-	
+		
 	@Autowired
 	private DataConverter dataConverter;
+	
+	@Value("${authService.endpoint.addUser}")
+	private String addAuthUserEndpoint;
+	
+//	private String 
 	
 	/**
 	 * Handle request to get details of customer
@@ -81,15 +83,6 @@ public class CustomerController {
 	 * @author root
 	 * 
 	 */
-//	@GetMapping
-//	public String customerInfo(@RequestParam String email) {
-//		
-//		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
-//		String customer = ConvertToJson(customerEntity);
-//		return customer;
-//		
-//	}
-	
 	@GetMapping
 	public String customerInfo(@RequestParam String email, HttpServletRequest request) {
 		
@@ -101,10 +94,8 @@ public class CustomerController {
 		}
 		
 		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
-//		String customer = ConvertToJson(customerEntity);
 		String customerJson = dataConverter.convertToJson(customerEntity);
-		return customerJson;
-		
+		return customerJson;	
 	}
 	
 	/**
@@ -118,40 +109,13 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@PostMapping("/add")
 	@PostMapping
 	public String addCustomer(@RequestBody CustomerEntity customerEntity) {
-		
+		//TODO Only authentication service should be able to call this
+		//TODO Need to check whether customer already exists or not
 		CustomerEntity savedCustomerEntity = customerAddService.saveCustomer(customerEntity);
-//		String customer = ConvertToJson(savedCustomerEntity);
 		String customerJson = dataConverter.convertToJson(savedCustomerEntity);
 		return customerJson;
-		
-	}
-	
-	/**
-	 * Handle request to edit already existing customer
-	 * 
-	 * @param editCustomerModel
-	 * @return JSON string
-	 * 
-	 * @see CustomerEntity
-	 * @see EditCustomerModel
-	 * 
-	 * @author Ashish Sam T George
-	 * 
-	 */
-//	@PutMapping("/edit")
-	@PutMapping
-	public String editCustomer(@RequestBody EditCustomerModel editCustomerModel) {
-		
-		//TODO Need to check whether customer already exists or not
-		
-		CustomerEntity editedCustomer = customerEditService.editCustomer(editCustomerModel);
-//		String customer = ConvertToJson(editedCustomer);
-		String customerJson = dataConverter.convertToJson(editedCustomer);
-		return customerJson;
-		
 	}
 	
 	/**
@@ -165,18 +129,16 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@DeleteMapping("/disable")
 	@DeleteMapping
 	public String disableCustomer(@RequestParam String email) throws IOException, InterruptedException {
 		
 		//TODO Get email from header
+		
+		//TODO Create endpoint for disabling and enabling users in authentication service
 		CustomerEntity disabledCustomer = customerStatusService.disableCustomer(email);
-//		String customer = ConvertToJson(disabledCustomer);
 		String customerJson = dataConverter.convertToJson(disabledCustomer);
 		return customerJson;
-		
 	}
-	
 	
 	/**
 	 * Handle request to enable an already existing customer
@@ -189,17 +151,13 @@ public class CustomerController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@PatchMapping("/enable")
 	@PatchMapping
 	public String enableCustomer(@RequestParam String email) throws InterruptedException, IOException {
 		
 		//TODO Get email from header
 		CustomerEntity enabledCustomer = customerStatusService.enableCustomer(email);
-//		String customer = ConvertToJson(enabledCustomer);
 		String customerJson = dataConverter.convertToJson(enabledCustomer);
-		return customerJson;
-//		return customer;
-		
+		return customerJson;	
 	}
 	
 	@PutMapping("/fullName")
@@ -209,6 +167,26 @@ public class CustomerController {
 		//TODO Call authentication service to modify full name
 		String email = "";
 		CustomerEntity changedCustomer = customerNameService.changeFullName(email, fullName);
+		String customerJson = dataConverter.convertToJson(changedCustomer);
+		return customerJson;
+	}
+	
+	@PutMapping("/profileImage")
+	public String changeProfileImage(@RequestParam String imageUrl) {
+		//TODO Get email from header
+		
+		String email = "";
+		CustomerEntity changedCustomer = customerProfileImageService.changeProfileImage(email, imageUrl);
+		String customerJson = dataConverter.convertToJson(changedCustomer);
+		return customerJson;
+	}
+	
+	@PutMapping("/address")
+	public String changeAddress(@RequestBody CustomerAddressModel customerAddressModel) {
+		//TODO Get email from header
+		
+		String email = "";
+		CustomerEntity changedCustomer = customerAddressService.changeAddress(email, customerAddressModel);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
 	}
@@ -240,26 +218,6 @@ public class CustomerController {
 		//TODO Both of the above logic should be in authentication service
 		//TODO Call authentication service
 		return "NOT IMPLEMENTED";
-	}
-	
-	@PutMapping("/profileImage")
-	public String changeProfileImage(@RequestParam String imageUrl) {
-		//TODO Get email from header
-		
-		String email = "";
-		CustomerEntity changedCustomer = customerProfileImageService.changeProfileImage(email, imageUrl);
-		String customerJson = dataConverter.convertToJson(changedCustomer);
-		return customerJson;
-	}
-	
-	@PutMapping("/address")
-	public String changeAddress(@RequestBody CustomerAddressModel customerAddressModel) {
-		//TODO Get email from header
-		
-		String email = "";
-		CustomerEntity changedCustomer = customerAddressService.changeAddress(email, customerAddressModel);
-		String customerJson = dataConverter.convertToJson(changedCustomer);
-		return customerJson;
 	}
 
 }

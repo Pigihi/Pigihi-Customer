@@ -27,6 +27,9 @@ import com.pigihi.service.CustomerNameService;
 import com.pigihi.service.CustomerProfileImageService;
 import com.pigihi.service.admin.AdminCustomerQueryService;
 import com.pigihi.service.admin.AdminCustomerStatusService;
+import com.pigihi.service.admin.AdminCustomerAddressService;
+import com.pigihi.service.admin.AdminCustomerNameService;
+import com.pigihi.service.admin.AdminCustomerProfileImageService;
 
 /**
  * @author Ashish Sam T George
@@ -38,56 +41,61 @@ import com.pigihi.service.admin.AdminCustomerStatusService;
 public class AdminCustomerController {
 	
 	@Autowired
-	private AdminCustomerQueryService customerAdminQueryService;
+	private AdminCustomerQueryService adminCustomerQueryService;
 	
 	@Autowired
-	private AdminCustomerStatusService customerAdminService;
+	private AdminCustomerStatusService adminCustomerStatusService;
 	
 	@Autowired
-	private CustomerNameService customerNameService;
+	private AdminCustomerNameService adminCustomerNameService;
 	
 	@Autowired
-	private CustomerProfileImageService customerProfileImageService;
-	
+	private AdminCustomerProfileImageService adminCustomerProfileImageService;
+
 	@Autowired
-	private CustomerAddressService customerAddressService;
-	
+	private AdminCustomerAddressService adminCustomerAddressService;
+		
 	@Autowired
 	private DataConverter dataConverter;
 
+	// TODO Only admins should be able to do this
+	@GetMapping("/all")
+	public String getCustomers() {
+		List<CustomerEntity> customers = adminCustomerQueryService.findAllCustomers();
+		String customersJson = dataConverter.convertToJson(customers);
+		return customersJson;
+	}
+		
+	@GetMapping
+	public String getCustomerInfo(@RequestParam String email) {
+		CustomerEntity customer = adminCustomerQueryService.find(email);
+		String customerJson = dataConverter.convertToJson(customer);
+		return customerJson;
+	}
+	
 	// TODO Currently, a seperate controller method is used to handle disabling
 	// customer by admin. Revaluate whether this is neccessary
 	@DeleteMapping
 	public String disableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
-
-		CustomerEntity adminDisabledCustomer = customerAdminService.disableCustomerByAdmin(email);
+		CustomerEntity adminDisabledCustomer = adminCustomerStatusService.disableCustomerByAdmin(email);
 		String customerJson = dataConverter.convertToJson(adminDisabledCustomer);
 		return customerJson;
-		
 	}
 
 	// TODO Only admins should be able to do this
 	@PatchMapping
 	public String enableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
-		CustomerEntity adminEnabledCustomer = customerAdminService.enableCustomerByAdmin(email);
+		CustomerEntity adminEnabledCustomer = adminCustomerStatusService.enableCustomerByAdmin(email);
 		String customerJson = dataConverter.convertToJson(adminEnabledCustomer);
 		return customerJson;
 	}
 
-	// TODO Only admins should be able to do this
-	@GetMapping("/all")
-	public String getCustomers() {
-		List<CustomerEntity> customers = customerAdminQueryService.findAllCustomers();
-//		Gson listGson = new Gson();
-//		String customersJson = listGson.toJson(customers);
-		String customersJson = dataConverter.convertToJson(customers);
-		return customersJson;
-	}
+	
 	
 	@PutMapping("/fullName")
 	public String changeCustomerName(@RequestParam String email,
 										@RequestParam String fullName) throws IOException, InterruptedException {
-		CustomerEntity changedCustomer = customerNameService.changeFullName(email, fullName);
+		CustomerEntity changedCustomer = adminCustomerNameService.changeFullName(email, fullName);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
 	}
@@ -95,7 +103,7 @@ public class AdminCustomerController {
 	@PutMapping("/profileImage")
 	public String changeCustomerProfileImage(@RequestParam String email,
 												@RequestParam String imageUrl) {
-		CustomerEntity changedCustomer = customerProfileImageService.changeProfileImage(email, imageUrl);
+		CustomerEntity changedCustomer = adminCustomerProfileImageService.changeProfileImage(email, imageUrl);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
 	}
@@ -103,7 +111,7 @@ public class AdminCustomerController {
 	@PutMapping("/address")
 	public String changeCustomerAddress(@RequestParam String email,
 											@RequestBody CustomerAddressModel customerAddressModel) {
-		CustomerEntity changedCustomer = customerAddressService.changeAddress(email, customerAddressModel);
+		CustomerEntity changedCustomer = adminCustomerAddressService.changeAddress(email, customerAddressModel);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
 	}

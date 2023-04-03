@@ -19,4 +19,9 @@ public class AdminCustomerQueryService {
 		return customers;
 	}
 
+	public CustomerEntity find(String email) {
+		CustomerEntity customer = customerRepository.findByEmail(email);
+		return customer;
+	}
+
 }
