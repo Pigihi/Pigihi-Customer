@@ -89,8 +89,6 @@ public class AdminCustomerController {
 		String customerJson = dataConverter.convertToJson(adminEnabledCustomer);
 		return customerJson;
 	}
-
-	
 	
 	@PutMapping("/fullName")
 	public String changeCustomerName(@RequestParam String email,
