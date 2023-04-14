@@ -48,20 +48,22 @@ public class CustomerStatusService {
 	 * 
 	 */
 	public CustomerEntity disableCustomer(String email) throws InterruptedException, IOException {
-		
 		CustomerEntity customer = customerRepository.findByEmail(email);
-//		customer.setStatus(StatusEnum.USER_DISABLED);
-		customer.setEnableStatus(StatusEnum.USER_DISABLED);
-		CustomerEntity disabledCustomer = customerRepository.save(customer);
+		if(customer.getEnableStatus() != StatusEnum.ADMIN_DISABLED) {
+			customer.setEnableStatus(StatusEnum.USER_DISABLED);
+			CustomerEntity disabledCustomer = customerRepository.save(customer);
 
-		//TODO Check the response
-		
-		String uri = authUri.concat(disableUserEndpoint);
-		HttpResponse<String> response = deleteRequestSender.send(uri, disableUserQueryParam, 
-																	email);
-		System.out.println("Response from authentication microservice: " + response.body());
-		
-		return disabledCustomer;
+			//TODO Check the response
+			
+			String uri = authUri.concat(disableUserEndpoint);
+			HttpResponse<String> response = deleteRequestSender.send(uri, disableUserQueryParam, 
+																		email, email);
+			System.out.println("Response from authentication microservice: " + response.body());
+			return disabledCustomer;
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -76,21 +78,22 @@ public class CustomerStatusService {
 	 * 
 	 */
 	public CustomerEntity enableCustomer(String email) throws InterruptedException, IOException {
-		
-		//TODO Consider who makes this call (customer or admin) and then do the needful
-		
 		CustomerEntity customer = customerRepository.findByEmail(email);
-//		customer.setStatus(StatusEnum.ENABLED);
-		customer.setEnableStatus(StatusEnum.ENABLED);
-		CustomerEntity enabledCustomer = customerRepository.save(customer);
+		if(customer.getEnableStatus() != StatusEnum.ADMIN_DISABLED) {
+			customer.setEnableStatus(StatusEnum.ENABLED);
+			CustomerEntity enabledCustomer = customerRepository.save(customer);
 
-		//TODO Check response
+			//TODO Check response
 
-		String uri = authUri.concat(enableUserEndpoint);
-		HttpResponse<String> response = patchRequestSender.send(uri, enableUserQueryParam, 
-																email);
-		System.out.println("Response obtained from authentication service: " + response.body());
-		return enabledCustomer;
+			String uri = authUri.concat(enableUserEndpoint);
+			HttpResponse<String> response = patchRequestSender.send(uri, enableUserQueryParam, 
+																	email, email);
+			System.out.println("Response obtained from authentication service: " + response.body());
+			return enabledCustomer;
+		}
+		else {
+			return null;
+		}
 	}
 
 }

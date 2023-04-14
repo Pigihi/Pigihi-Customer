@@ -7,6 +7,8 @@ mongodb_database_name: testWorkingDB
 authService:
   uri: http://localhost:8099/auth
   endpoint:
+    addUser:
+      endpoint: /register/user
     disableUser:
       endpoint: /user/byAdmin
       queryParam: email

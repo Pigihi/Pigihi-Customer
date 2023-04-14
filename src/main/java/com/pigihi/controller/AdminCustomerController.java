@@ -58,7 +58,6 @@ public class AdminCustomerController {
 	@Autowired
 	private DataConverter dataConverter;
 
-	// TODO Only admins should be able to do this
 	@GetMapping("/all")
 	public String getCustomers() {
 		List<CustomerEntity> customers = adminCustomerQueryService.findAllCustomers();
@@ -73,8 +72,6 @@ public class AdminCustomerController {
 		return customerJson;
 	}
 	
-	// TODO Currently, a seperate controller method is used to handle disabling
-	// customer by admin. Revaluate whether this is neccessary
 	@DeleteMapping
 	public String disableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
 		CustomerEntity adminDisabledCustomer = adminCustomerStatusService.disableCustomerByAdmin(email);
@@ -82,7 +79,6 @@ public class AdminCustomerController {
 		return customerJson;
 	}
 
-	// TODO Only admins should be able to do this
 	@PatchMapping
 	public String enableCustomerByAdmin(@RequestParam String email) throws IOException, InterruptedException {
 		CustomerEntity adminEnabledCustomer = adminCustomerStatusService.enableCustomerByAdmin(email);

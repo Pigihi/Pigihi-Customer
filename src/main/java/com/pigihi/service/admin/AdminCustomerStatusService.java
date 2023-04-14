@@ -22,6 +22,7 @@ import com.pigihi.repository.CustomerRepository;
 import com.pigihi.service.DELETERequestSender;
 import com.pigihi.service.PATCHRequestSender;
 
+
 /**
  * @author Ashish Sam T George
  *
@@ -58,12 +59,14 @@ public class AdminCustomerStatusService {
 
 	public CustomerEntity disableCustomerByAdmin(String email) throws IOException, InterruptedException {
 
+		String id = "";
+		
 		CustomerEntity customer = customerRepository.findByEmail(email);
 		customer.setEnableStatus(StatusEnum.ADMIN_DISABLED);
 		CustomerEntity disabledCustomer = customerRepository.save(customer);
 		String uri = authUri.concat(disableUserEndpoint);
 		HttpResponse<String> response = deleteRequestSender.send(uri, disableUserQueryParam, 
-																	email);
+																	email, id);
 		System.out.println("Response from authentication microservice: " + response.body());
 		return disabledCustomer;
 		
@@ -71,13 +74,15 @@ public class AdminCustomerStatusService {
 	
 	public CustomerEntity enableCustomerByAdmin(String email) throws IOException, InterruptedException {
 
+		String id = "";
+		
 		CustomerEntity customer = customerRepository.findByEmail(email);
 		System.out.println("Obtained Customer: " + customer);
 		customer.setEnableStatus(StatusEnum.ENABLED);
 		CustomerEntity enabledCustomer = customerRepository.save(customer);		
 		String uri = authUri.concat(enableUserEndpoint);
 		HttpResponse<String> response = patchRequestSender.send(uri, enableUserQueryParam, 
-																email);
+																email, id);
 		System.out.println("Response from authentication microservice: " + response.body());
 		return enabledCustomer;
 		

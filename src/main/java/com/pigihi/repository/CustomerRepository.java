@@ -3,6 +3,8 @@
  */
 package com.pigihi.repository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -18,5 +20,8 @@ public interface CustomerRepository extends MongoRepository<CustomerEntity, Stri
 
 	@Query("{email: ?0}")
 	CustomerEntity findByEmail(String email);
+	
+	@Query("{$or: [{'email': ?0}, {'mobile': ?1}]}")
+	List<CustomerEntity> findByEmailAndMobile(String email, String mobile);
 	
 }

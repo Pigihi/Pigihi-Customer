@@ -35,8 +35,9 @@ public class CustomerNameService {
 		
 		//TODO Create API endpoint for changing full name in authentication service
 		String uri = authUri.concat(fullNameEndpoint);
-		HttpResponse<String> response = putRequestSender.send(uri, fullNameQueryParam, 
-																fullName);
+		HttpResponse<String> response = putRequestSender.send(uri, "email", email, fullNameQueryParam, 
+																fullName, "");
+		System.out.println(response.uri());
 		System.out.println("Response obtained from authentication service: " + response.body());
 		return changedCustomer;
 	}

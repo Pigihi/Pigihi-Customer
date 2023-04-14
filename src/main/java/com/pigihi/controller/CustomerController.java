@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,11 +69,11 @@ public class CustomerController {
 	@Autowired
 	private DataConverter dataConverter;
 	
-	@Value("${authService.endpoint.addUser}")
-	private String addAuthUserEndpoint;
+//	@Value("${authService.endpoint.addUser.endpoint}")
+//	private String addAuthUserEndpoint;
 	
-//	private String 
-	
+	//TODO Should sanitize all data input
+		
 	/**
 	 * Handle request to get details of customer
 	 * 
@@ -84,14 +86,9 @@ public class CustomerController {
 	 * 
 	 */
 	@GetMapping
-	public String customerInfo(@RequestParam String email, HttpServletRequest request) {
-		
-		//TODO Get email from header
-		System.out.println("Headers received in Customer Service: ");
-		Enumeration<String> headers = request.getHeaderNames();
-		while(headers.hasMoreElements()) {
-			System.out.println(headers.nextElement());
-		}
+	public String customerInfo(HttpServletRequest request) {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
 		CustomerEntity customerEntity = customerQueryService.customerInfo(email);
 		String customerJson = dataConverter.convertToJson(customerEntity);
@@ -111,8 +108,6 @@ public class CustomerController {
 	 */
 	@PostMapping
 	public String addCustomer(@RequestBody CustomerEntity customerEntity) {
-		//TODO Only authentication service should be able to call this
-		//TODO Need to check whether customer already exists or not
 		CustomerEntity savedCustomerEntity = customerAddService.saveCustomer(customerEntity);
 		String customerJson = dataConverter.convertToJson(savedCustomerEntity);
 		return customerJson;
@@ -130,11 +125,10 @@ public class CustomerController {
 	 * 
 	 */
 	@DeleteMapping
-	public String disableCustomer(@RequestParam String email) throws IOException, InterruptedException {
+	public String disableCustomer() throws IOException, InterruptedException {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
-		//TODO Get email from header
-		
-		//TODO Create endpoint for disabling and enabling users in authentication service
 		CustomerEntity disabledCustomer = customerStatusService.disableCustomer(email);
 		String customerJson = dataConverter.convertToJson(disabledCustomer);
 		return customerJson;
@@ -152,20 +146,21 @@ public class CustomerController {
 	 * 
 	 */
 	@PatchMapping
-	public String enableCustomer(@RequestParam String email) throws InterruptedException, IOException {
+	public String enableCustomer() throws InterruptedException, IOException {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
-		//TODO Get email from header
 		CustomerEntity enabledCustomer = customerStatusService.enableCustomer(email);
 		String customerJson = dataConverter.convertToJson(enabledCustomer);
-		return customerJson;	
+		return customerJson;
 	}
 	
 	@PutMapping("/fullName")
 	public String changeFullName(@RequestParam String fullName) throws InterruptedException, IOException {
-		//TODO Get email from header
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
 		//TODO Call authentication service to modify full name
-		String email = "";
 		CustomerEntity changedCustomer = customerNameService.changeFullName(email, fullName);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
@@ -173,9 +168,9 @@ public class CustomerController {
 	
 	@PutMapping("/profileImage")
 	public String changeProfileImage(@RequestParam String imageUrl) {
-		//TODO Get email from header
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
-		String email = "";
 		CustomerEntity changedCustomer = customerProfileImageService.changeProfileImage(email, imageUrl);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
@@ -183,9 +178,9 @@ public class CustomerController {
 	
 	@PutMapping("/address")
 	public String changeAddress(@RequestBody CustomerAddressModel customerAddressModel) {
-		//TODO Get email from header
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
-		String email = "";
 		CustomerEntity changedCustomer = customerAddressService.changeAddress(email, customerAddressModel);
 		String customerJson = dataConverter.convertToJson(changedCustomer);
 		return customerJson;
